@@ -45,7 +45,7 @@ OSM のデータは、**ノード**・**ウェイ**・**タグ**の3つででき
 | `toll=yes` | 有料道路 |
 | `ksj:category=1` など | N13 の元の属性（このツールが独自に残しているもの。8属性すべて） |
 
-N13 の属性がどのタグになるかの詳しい対応は [docs/notes.md](docs/notes.md) を見てください。
+N13 の属性がどのタグになるか、コードの意味、QGIS での見方は [docs/attributes.md](docs/attributes.md) にまとめています。
 
 ## 使い方
 
@@ -73,7 +73,7 @@ zip の中のフォルダ構成によっては、`.shp` のパスを合わせて
 uv run --group preview scripts/preview.py out/N13-24_6441.osm.pbf preview.png 141.32 141.38 43.04 43.08
 ```
 
-QGIS に `.osm.pbf` をドラッグ＆ドロップして `lines` レイヤを選ぶと、道路をクリックしてタグを確認できます。
+QGIS に `.osm.pbf` をドラッグ＆ドロップして `lines` レイヤを選ぶと、道路をクリックしてタグを確認できます。初期設定では `ksj:*` タグが `other_tags` という1つの列にまとめられるので、別々の列にしたい場合は `config/osmconf.ini` を使ってください（[docs/attributes.md](docs/attributes.md#4-qgis-で見る)）。
 
 ## 結果の例
 
@@ -93,7 +93,10 @@ QGIS に `.osm.pbf` をドラッグ＆ドロップして `lines` レイヤを選
 ├── tests/             # pytest（タグの対応付け、ノードの共有）
 ├── scripts/
 │   └── preview.py     # 変換結果を画像にして目視確認する
+├── config/
+│   └── osmconf.ini    # QGIS / GDAL で ksj:* タグを別々の列として読むための設定
 ├── docs/
+│   ├── attributes.md  # 属性とタグの対応表（コードの意味、QGIS での見方）
 │   └── notes.md       # 調べたこと・試行の記録（OSM 形式の解説、注意点、逆変換、可逆性）
 ├── .github/workflows/ci.yml   # Ruff と pytest を実行
 ├── data/              # 元データ（Git 管理外）

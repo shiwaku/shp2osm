@@ -334,8 +334,16 @@ GDALはOSMデータを、図形の種類ごとに次の5つのレイヤに分け
 - **タグの扱い**：初期設定では `name` や `highway` などよく使われるタグだけが列になる。それ以外のタグは `other_tags` という1つの列に `"key"=>"value",...` の形でまとめて入る。`ksj:category` などを列として出したい場合は、`osmconf.ini` で列に加えるタグを指定する
 - **Shapefileの制限**：列名は10文字まで、文字列は254バイトまで、ファイルは1つ2GBまで。大きいデータや長いタグを扱うなら GeoPackage（`-f GPKG`）のほうが安全
 - **つながりの情報は消える**：ノードを共有しているという情報はなくなり、ただの線になる
-- このMacのGDALは起動しない状態なので、試すには先にGDALを直す（`brew reinstall gdal` など）。QGISにはGDALが同梱されているので、QGISで `.osm.pbf` を開いて「エクスポート」から Shapefile として保存する方法もある
-- まだ実際には試していない
+- このMacの Homebrew の GDAL は起動しない状態だが、QGIS に同梱されている GDAL（`/Applications/QGIS.app/Contents/MacOS/ogr2ogr`）で変換できる。QGISで `.osm.pbf` を開いて「エクスポート」から保存する方法もある
+
+#### 試した結果（2026-10-05）
+
+QGIS 同梱の GDAL 3.12 で、`out/N13-24_6441.osm.pbf` の `lines` レイヤを GeoPackage に書き出した。311,051本すべてが出力され、約1秒で終わった。`config/osmconf.ini` を使うと、`ksj:*` タグが `ksj_category` などの別々の列になる（使い方と属性の対応は [attributes.md](attributes.md)）。
+
+```bash
+/Applications/QGIS.app/Contents/MacOS/ogr2ogr --config OSM_CONFIG_FILE config/osmconf.ini \
+  -f GPKG out/N13-24_6441.gpkg out/N13-24_6441.osm.pbf lines
+```
 
 ### 可逆か？
 
