@@ -112,10 +112,10 @@ def filterTags(attrs):
     if not attrs:
         return
     tags = {}
-    if 'name' in attrs:
-        tags['name'] = attrs['name']
-    if 'type' in attrs:
-        tags['highway'] = 'residential'  # 例
+    if "name" in attrs:
+        tags["name"] = attrs["name"]
+    if "type" in attrs:
+        tags["highway"] = "residential"  # 例
     return tags
 ```
 
@@ -198,6 +198,8 @@ osmium fileinfo -e output.osm.pbf   # 要素の件数などを確認
 - `osmium`：未インストール → `brew install osmium-tool`
 - `osmconvert`：未インストール
 
+2026-10-05 にリポジトリの構成を整理した（uv・Python 3.14、`shp2osm.py` を `src/shp2osm/` のパッケージに分割）。以下の試行の記録に出てくる `.venv/bin/python shp2osm.py ...` は、今は `uv run shp2osm ...` で同じことができる。変換結果（ノード数・ウェイ数）は整理前と同じであることを確認した。
+
 ## 試行：国土数値情報（道路）N13 を1メッシュ変換（2026-10-01）
 
 ### 使ったデータ
@@ -220,7 +222,7 @@ osmium fileinfo -e output.osm.pbf   # 要素の件数などを確認
 | N13_007 | 有料区分 | 1無料 2有料 |
 | N13_008 | 二次メッシュ番号 | |
 
-### タグの対応付け（`shp2osm.py`）
+### タグの対応付け（`src/shp2osm/tags.py`）
 
 - 道路分類：国道 → `highway=primary`、都道府県道 → `secondary`、市区町村道等 → `residential`（幅員3m未満なら `service`）、高速 → `motorway`、その他・不明 → `road`
 - 種別：徒歩道 → `footway`、石段 → `steps`、庭園路 → `service` + `service=driveway`

@@ -1,0 +1,36 @@
+[project]
+name = "shp2osm"
+version = "0.1.0"
+description = "国土数値情報（道路）N13 の Shapefile を OSM 形式（.osm / .osm.pbf）に変換する"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "osmium>=4.3",
+    "pyshp>=3.0",
+]
+
+[project.scripts]
+shp2osm = "shp2osm.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "ruff",
+]
+preview = [
+    "matplotlib",
+]
+
+[build-system]
+requires = ["uv_build>=0.12,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv]
+exclude-newer = "7 days"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = ["RUF001", "RUF003"]
