@@ -16,6 +16,7 @@ from matplotlib.collections import LineCollection  # noqa: E402
 
 # highway → (色, 線の太さ)。描く順（細い道 → 太い道）に並べる
 STYLE = {
+    "path": ("#bbbbbb", 0.4),
     "service": ("#bbbbbb", 0.3),
     "residential": ("#7f7f7f", 0.5),
     "footway": ("#2ca02c", 0.4),
@@ -24,6 +25,7 @@ STYLE = {
     "construction": ("#8c564b", 0.8),
     "secondary": ("#e6c200", 1.4),
     "primary": ("#ff7f0e", 1.8),
+    "trunk": ("#ff7f0e", 1.8),
     "motorway": ("#d62728", 2.2),
 }
 
