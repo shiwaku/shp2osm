@@ -129,7 +129,22 @@ ksj:width=13-19.5m  ksj:toll=1  ksj:date=2023-11-30  ksj:mesh=644142
 
 QGIS（GDAL）は、初期設定では `name` や `highway` などの決まったタグだけを列にし、それ以外のタグを `other_tags` という1つの列に `"ksj:category"=>"3",...` の形でまとめる。`config/osmconf.ini` を使うと、`ksj:*` タグと `bridge`・`tunnel`・`layer` などが1つずつ別の列になる。
 
-### QGIS の設定
+### QGIS の Python コンソールから開く（おすすめ）
+
+設定を変えずに、このレイヤだけ `config/osmconf.ini` で読む方法。「プラグイン」→「Python コンソール」を開き、次を貼り付けて実行する（パスは自分の環境に合わせる）。
+
+```python
+repo = "/Users/xxx/GitHub/shp2osm"
+iface.addVectorLayer(
+    f"{repo}/out/N13-24_6441.osm.pbf|layername=lines|option:CONFIG_FILE={repo}/config/osmconf.ini",
+    "N13-24_6441 lines",
+    "ogr",
+)
+```
+
+GDAL の OSM ドライバの「開くときのオプション」（`CONFIG_FILE`）を使っている。追加したレイヤはプロジェクトに保存すれば、次からはそのまま開ける。
+
+### QGIS の設定に登録する
 
 1. 「QGIS」メニュー →「環境設定」（Windows / Linux は「設定」→「オプション」）→「システム」→「環境」
 2. 「カスタム変数を使う」にチェックを入れ、変数を追加する
