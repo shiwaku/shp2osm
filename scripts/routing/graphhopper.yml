@@ -1,0 +1,33 @@
+# GraphHopper 11 の設定（scripts/routing/setup.sh から使う）
+# config-example.yml をもとに、自動車（car）と徒歩（foot）の2つのプロファイルにしたもの
+graphhopper:
+  datareader.file: ""
+  graph.location: graph-cache
+  profiles:
+    - name: car
+      custom_model_files: [car.json]
+    - name: foot
+      custom_model_files: [foot.json]
+  profiles_ch:
+    - profile: car
+    - profile: foot
+  profiles_lm: []
+  graph.encoded_values: car_access, car_average_speed, road_access, foot_access, foot_average_speed, foot_priority, foot_road_access, hike_rating, country, road_class, mtb_rating
+  # 徒歩でも経路を引くので、道路の種類で取り込みを除外しない
+  import.osm.ignored_highways: ""
+server:
+  application_connectors:
+    - type: http
+      port: 8989
+      bind_host: localhost
+  request_log:
+    appenders: []
+  admin_connectors:
+    - type: http
+      port: 8990
+      bind_host: localhost
+logging:
+  appenders:
+    - type: console
+      time_zone: UTC
+      log_format: "%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"

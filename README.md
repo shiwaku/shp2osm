@@ -65,6 +65,23 @@ uv run shp2osm data/N13-24_5339_SHP/N13-24_5339.shp out/N13-24_5339.osm out/N13-
 
 zip の中のフォルダ構成によっては、`.shp` のパスを合わせてください。
 
+### 隣り合うメッシュをまとめて変換する
+
+N13 は1次メッシュごとにファイルが分かれています。`.shp` を複数指定すると1つのデータにまとめて変換し、メッシュの境目でも道路がつながります（境目の端点は両側で同じ座標なので、1つのノードにまとまります）。
+
+```bash
+uv run shp2osm data/N13-24_6440_SHP/N13-24_6440.shp data/N13-24_6441_SHP/N13-24_6441.shp out/N13-24_6440-6441.osm.pbf
+```
+
+### 経路探索エンジンで試す
+
+OSRM・Valhalla・GraphHopper に読み込ませて、経路が引けるか確かめられます（Docker と Java 21 以上が必要）。結果と注意点は [docs/routing.md](docs/routing.md) にまとめています。
+
+```bash
+scripts/routing/setup.sh out/N13-24_6440-6441.osm.pbf
+uv run scripts/routing/compare.py out/routing/routes.geojson
+```
+
 ### 変換結果を画像で確認する
 
 範囲（西端 東端 南端 北端）を指定すると、道路の種類ごとに色分けした画像を作ります。
@@ -81,6 +98,7 @@ QGIS に `.osm.pbf` をドラッグ＆ドロップして `lines` レイヤを選
 |---|---|---|---|---|---|
 | 6441（札幌周辺） | 1,232,339 | 311,051 | 250MB | 7.4MB | 約8秒 |
 | 5339（東京周辺） | 5,032,828 | 1,943,242 | 1.3GB | 38MB | 約40秒 |
+| 6440＋6441（小樽〜札幌） | 1,549,000 | 345,609 | — | 9.3MB | 約7秒 |
 
 ## リポジトリの構成
 
@@ -92,11 +110,13 @@ QGIS に `.osm.pbf` をドラッグ＆ドロップして `lines` レイヤを選
 │   └── cli.py         # コマンド（uv run shp2osm）
 ├── tests/             # pytest（タグの対応付け、ノードの共有）
 ├── scripts/
-│   └── preview.py     # 変換結果を画像にして目視確認する
+│   ├── preview.py     # 変換結果を画像にして目視確認する
+│   └── routing/       # 経路探索エンジン（OSRM・Valhalla・GraphHopper）での検証
 ├── config/
 │   └── osmconf.ini    # QGIS / GDAL で ksj:* タグを別々の列として読むための設定
 ├── docs/
 │   ├── attributes.md  # 属性とタグの対応表（コードの意味、QGIS での見方）
+│   ├── routing.md     # 経路探索エンジンでの検証結果
 │   └── notes.md       # 調べたこと・試行の記録（OSM 形式の解説、注意点、逆変換、可逆性）
 ├── .github/workflows/ci.yml   # Ruff と pytest を実行
 ├── data/              # 元データ（Git 管理外）
@@ -114,7 +134,7 @@ uv run pytest
 ## 注意
 
 - タグの対応付けは用途に合わせて `src/shp2osm/tags.py` で調整できます
-- `oneway`（一方通行）や `maxspeed`（制限速度）は N13 にないため付けていません
+- `oneway`（一方通行）や `maxspeed`（制限速度）は N13 にないため付けていません。経路探索では一方通行が無視され、所要時間は目安になります
 - ID は 1 から振る仮の値です。OpenStreetMap 本体へのアップロードには使えません
 - 変換したデータを公開・利用する際は、国土数値情報の利用規約に従って出典を表示してください
 
